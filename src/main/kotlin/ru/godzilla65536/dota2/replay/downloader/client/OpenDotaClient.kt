@@ -14,7 +14,7 @@ class OpenDotaClient(
     private val props: OpenDotaProps,
 ) {
 
-    suspend fun getRecentMatches(gameMode: GameMode): Array<RecentMatch> =
+    suspend fun getRecentMatches(gameMode: GameMode? = null): Array<RecentMatch> =
         webClientConfig.openDotaWebClient
             .get()
             .uri { uriBuilder ->
@@ -22,7 +22,7 @@ class OpenDotaClient(
                     .pathSegment("players")
                     .pathSegment(props.steamAccountId.toString())
                     .pathSegment("recentMatches")
-                    .queryParam("game_mode", gameMode.id)
+                    .queryParam("game_mode", gameMode?.id)
                     .build()
             }
             .retrieve()

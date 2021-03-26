@@ -20,7 +20,7 @@ class AppConfig(
     @Scheduled(fixedDelay = 30000)
     fun downloadReplays() = mono {
 
-        val recentMatches = openDotaClient.getRecentMatches(GameMode.TURBO)
+        val recentMatches = openDotaClient.getRecentMatches()
         val savedReplays = storageService.getSavedReplays()
 
         val missingReplays = recentMatches.map { it.matchId }.toSet().minus(savedReplays)
