@@ -1,0 +1,5 @@
+opendota:
+  steam-account-id: 99015898
+  base-url: https://api.opendota.com/api
+
+replays-path: ./replays
