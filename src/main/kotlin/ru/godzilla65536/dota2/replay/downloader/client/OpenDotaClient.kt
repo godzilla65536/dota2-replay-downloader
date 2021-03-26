@@ -7,6 +7,8 @@ import ru.godzilla65536.dota2.replay.downloader.config.props.OpenDotaProps
 import ru.godzilla65536.dota2.replay.downloader.model.GameMode
 import ru.godzilla65536.dota2.replay.downloader.model.Match
 import ru.godzilla65536.dota2.replay.downloader.model.RecentMatch
+import ru.godzilla65536.dota2.replay.downloader.model.ReplayData
+import java.lang.RuntimeException
 
 @Component
 class OpenDotaClient(
@@ -30,17 +32,21 @@ class OpenDotaClient(
             .awaitSingle()
 
 
-    suspend fun getMatch(matchId: Long): Match =
-        webClientConfig.openDotaWebClient
+    suspend fun getReplayData(matchId: Long): ReplayData {
+        val arrayOfReplayData = webClientConfig.openDotaWebClient
             .get()
             .uri { uriBuilder ->
                 uriBuilder
-                    .pathSegment("matches")
-                    .pathSegment(matchId.toString())
+                    .pathSegment("replays")
+                    .queryParam("match_id", matchId)
                     .build()
             }
             .retrieve()
-            .bodyToMono(Match::class.java)
+            .bodyToMono(Array<ReplayData>::class.java)
             .awaitSingle()
+
+        if (arrayOfReplayData.isEmpty()) throw RuntimeException("Replay not found")
+        return arrayOfReplayData[0]
+    }
 
 }

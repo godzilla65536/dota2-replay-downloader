@@ -27,8 +27,9 @@ class AppConfig(
 
         if (missingReplays.isNotEmpty()) {
             missingReplays.forEach { matchId ->
-                val match = openDotaClient.getMatch(matchId)
-                downloadService.downloadReplay(match.replayUri)
+                val replayData = openDotaClient.getReplayData(matchId)
+                val replayUri = downloadService.buildReplayUri(replayData)
+                downloadService.downloadReplay(replayUri)
             }
         }
 

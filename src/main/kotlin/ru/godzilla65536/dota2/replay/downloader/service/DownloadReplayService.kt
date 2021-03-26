@@ -3,6 +3,7 @@ package ru.godzilla65536.dota2.replay.downloader.service
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
+import ru.godzilla65536.dota2.replay.downloader.model.ReplayData
 import java.io.BufferedInputStream
 import java.io.ByteArrayOutputStream
 import java.net.URI
@@ -32,5 +33,8 @@ class DownloadReplayService(
 
     private fun buildReplayName(replayUri: URI) =
         Paths.get(replayUri.path).fileName.toString().split("_")[0] + ".dem"
+
+    fun buildReplayUri(replayData: ReplayData) =
+        URI("http://replay${replayData.cluster}.valve.net/570/${replayData.matchId}_${replayData.replaySalt}.dem.bz2")
 
 }
