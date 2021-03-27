@@ -3,3 +3,7 @@ opendota:
   base-url: https://api.opendota.com/api
 
 replays-path: ./replays
+
+logging:
+  file:
+    path: .

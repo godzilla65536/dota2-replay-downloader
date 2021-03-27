@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import ru.godzilla65536.dota2.replay.downloader.client.OpenDotaClient
-import ru.godzilla65536.dota2.replay.downloader.model.GameMode
 import ru.godzilla65536.dota2.replay.downloader.service.DownloadReplayService
 import ru.godzilla65536.dota2.replay.downloader.service.ReplaysStorageService
 
@@ -14,7 +13,7 @@ import ru.godzilla65536.dota2.replay.downloader.service.ReplaysStorageService
 class AppConfig(
     private val openDotaClient: OpenDotaClient,
     private val downloadService: DownloadReplayService,
-    private val storageService: ReplaysStorageService
+    private val storageService: ReplaysStorageService,
 ) {
 
     @Scheduled(fixedDelay = 30000)
@@ -27,9 +26,11 @@ class AppConfig(
 
         if (missingReplays.isNotEmpty()) {
             missingReplays.forEach { matchId ->
-                val replayData = openDotaClient.getReplayData(matchId)
-                val replayUri = downloadService.buildReplayUri(replayData)
-                downloadService.downloadReplay(replayUri)
+                mono {
+                    val replayData = openDotaClient.getReplayData(matchId)
+                    val replayUri = downloadService.buildReplayUri(replayData)
+                    downloadService.downloadReplay(replayUri)
+                }.subscribe()
             }
         }
 
