@@ -5,8 +5,7 @@ import org.springframework.boot.context.properties.ConstructorBinding
 import java.net.URI
 
 @ConstructorBinding()
-@ConfigurationProperties(prefix = "opendota")
-data class OpenDotaProps(
-    val steamAccountIds: List<Long>,
-    val baseUrl: URI,
+@ConfigurationProperties(prefix = "scheduler")
+data class SchedulerProps(
+    val maxDownloadsAtTime: Int,
 )

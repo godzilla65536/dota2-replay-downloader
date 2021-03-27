@@ -1,6 +1,12 @@
 opendota:
-  steam-account-id: 99015898
+  steam-account-ids:
+    - 99015898
+    - 50266397
+    - 98869709
   base-url: https://api.opendota.com/api
+
+scheduler:
+  max-downloads-at-time: 10
 
 replays-path: ./replays
 

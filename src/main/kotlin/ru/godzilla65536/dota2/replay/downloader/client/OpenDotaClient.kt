@@ -5,10 +5,8 @@ import org.springframework.stereotype.Component
 import ru.godzilla65536.dota2.replay.downloader.config.OpenDotaWebClientConfig
 import ru.godzilla65536.dota2.replay.downloader.config.props.OpenDotaProps
 import ru.godzilla65536.dota2.replay.downloader.model.GameMode
-import ru.godzilla65536.dota2.replay.downloader.model.Match
 import ru.godzilla65536.dota2.replay.downloader.model.RecentMatch
 import ru.godzilla65536.dota2.replay.downloader.model.ReplayData
-import java.lang.RuntimeException
 
 @Component
 class OpenDotaClient(
@@ -16,13 +14,13 @@ class OpenDotaClient(
     private val props: OpenDotaProps,
 ) {
 
-    suspend fun getRecentMatches(gameMode: GameMode? = null): Array<RecentMatch> =
+    suspend fun getRecentMatches(steamAccountId: Long, gameMode: GameMode? = null): Array<RecentMatch> =
         webClientConfig.openDotaWebClient
             .get()
             .uri { uriBuilder ->
                 uriBuilder
                     .pathSegment("players")
-                    .pathSegment(props.steamAccountId.toString())
+                    .pathSegment(steamAccountId.toString())
                     .pathSegment("recentMatches")
                     .queryParam("game_mode", gameMode?.id)
                     .build()

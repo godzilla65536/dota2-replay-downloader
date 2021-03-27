@@ -10,7 +10,7 @@ import java.nio.file.Paths
 
 
 @Service
-class ReplaysStorageService {
+class StorageService {
 
     @Value("\${replays-path}")
     private val replaysPath: Path = Path.of("")
