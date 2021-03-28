@@ -32,9 +32,14 @@ class AppScheduler(
 
     @Scheduled(fixedDelay = 10000)
     fun findReplaysForRecentMatches() = mono {
-        val recentMatches = openDotaProps.steamAccountIds.map { client.getRecentMatches(it) }.flatMap { it.toList() }
+        val recentMatches = openDotaProps.steamAccountIds
+            .map { client.getRecentMatches(it) }
+            .flatMap { it.toList() }
+            .map { it.matchId }
+            .toSet()
         val savedReplays = storageService.getSavedReplays()
-        val newReplays = recentMatches.map { it.matchId }.toSet().minus(savedReplays)
+        val newReplays = recentMatches.minus(savedReplays)
+        logger.info("Found new replays: ${newReplays.size} $newReplays")
         if (newReplays.isNotEmpty()) downloadList.addAll(newReplays)
     }.block()
 

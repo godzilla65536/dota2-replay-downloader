@@ -24,7 +24,7 @@ class StorageService {
             .walk()
             .asIterable()
             .filter { it.isFile }
-            .filter { it.name.matches(Regex("\\d.dem")) }
+            .filter { it.name.matches(Regex("\\d+.dem")) }
             .map { it.nameWithoutExtension.toLong() }
             .toSet()
 
