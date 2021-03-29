@@ -25,7 +25,7 @@ class AppScheduler(
     private val storageService: StorageService,
     private val downloadService: DownloadService,
     private val schedulerProps: SchedulerProps,
-    private val openDotaProps: OpenDotaProps
+    private val openDotaProps: OpenDotaProps,
 ) {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
@@ -33,7 +33,9 @@ class AppScheduler(
     @Scheduled(fixedDelay = 10000)
     fun findReplaysForRecentMatches() = mono {
         val recentMatches = openDotaProps.steamAccountIds
-            .map { client.getRecentMatches(it) }
+            .map {
+                async { client.getRecentMatches(it) }
+            }.awaitAll()
             .flatMap { it.toList() }
             .map { it.matchId }
             .toSet()
